@@ -18,9 +18,12 @@ public class UserController {
 
     @PostMapping
     private ResponseEntity<?> save(@RequestBody CreateUserDTO createUserDTO){
+        System.out.println("entrei");
+        System.out.println(createUserDTO);
         try{
             return new ResponseEntity<>(userService.save(createUserDTO), HttpStatus.OK);
         }catch(Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }

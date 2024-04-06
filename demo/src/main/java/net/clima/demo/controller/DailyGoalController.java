@@ -36,4 +36,13 @@ public class DailyGoalController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
+
+    @GetMapping("/day/user/{userId}")
+    private ResponseEntity<?> getHabitsDoneInADay(@PathVariable Long userId){
+        try{
+            return new ResponseEntity<>(dailyGoalService.getHabitsDoneInADay(userId), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
 }

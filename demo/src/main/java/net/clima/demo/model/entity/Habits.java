@@ -28,6 +28,6 @@ public class Habits {
     private HabitCategory habitCategory;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DailyGoal> dailyGoalList;
-    private LocalDateTime initialDate;
     private LocalDateTime finalDate;
+    private String color;
 }

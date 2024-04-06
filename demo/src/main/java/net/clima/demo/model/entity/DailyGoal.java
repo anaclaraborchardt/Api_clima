@@ -4,13 +4,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.clima.demo.model.entity.GoalKindsValues.Boolean;
+import net.clima.demo.model.entity.GoalKindsValues.BooleanType;
 import net.clima.demo.model.entity.GoalKindsValues.Quantity;
 import net.clima.demo.model.entity.GoalKindsValues.Time;
 
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -29,7 +28,7 @@ public class DailyGoal {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Time time;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Boolean booleanS;
+    private BooleanType booleanS;
     private boolean done;
 
 }
