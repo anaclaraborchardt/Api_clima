@@ -3,6 +3,7 @@ package net.clima.demo.controller;
 import lombok.AllArgsConstructor;
 import net.clima.demo.model.dtos.CreateUserDTO;
 import net.clima.demo.model.dtos.UserEditDTO;
+import net.clima.demo.model.dtos.UserLoginDTO;
 import net.clima.demo.model.entity.User;
 import net.clima.demo.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -53,7 +54,18 @@ public class UserController {
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
+    }
 
+    @PostMapping("/login")
+    private ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO){
+        System.out.println("entrei");
+        System.out.println(userLoginDTO);
+        try{
+            return new ResponseEntity<>(userService.login(userLoginDTO), HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
 }

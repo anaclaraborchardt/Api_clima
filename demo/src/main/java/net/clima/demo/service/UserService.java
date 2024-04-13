@@ -2,6 +2,7 @@ package net.clima.demo.service;
 
 import lombok.AllArgsConstructor;
 import net.clima.demo.model.dtos.UserEditDTO;
+import net.clima.demo.model.dtos.UserLoginDTO;
 import net.clima.demo.model.entity.DailyGoal;
 import net.clima.demo.model.entity.Habits;
 import net.clima.demo.model.entity.User;
@@ -9,6 +10,8 @@ import net.clima.demo.model.dtos.CreateUserDTO;
 import net.clima.demo.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +27,10 @@ public class UserService {
 
     public User findOne(Long id){
         return userRepository.findById(id).get();
+    }
+
+    public List<User> findAll(){
+        return userRepository.findAll();
     }
 
     public User update(UserEditDTO userEdit) {
@@ -57,5 +64,18 @@ public class UserService {
             }
         }
     return count;
+    }
+
+    public User login(UserLoginDTO userLoginDTO){
+        for(User user : findAll()){
+            if(user.getEmail()!=null) {
+                if (user.getEmail().equals(userLoginDTO.getEmail())) {
+                    if (user.getPassword().equals(userLoginDTO.getPassword())) {
+                        return user;
+                    }
+                }
+            }
+        }
+        throw new RuntimeException("User not found");
     }
 }
