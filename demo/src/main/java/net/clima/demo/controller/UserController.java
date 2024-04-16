@@ -68,4 +68,15 @@ public class UserController {
         }
     }
 
+    @GetMapping("/teste/{email}")
+    private ResponseEntity<?> login(@PathVariable String email){
+        System.out.println("entrei");
+        try{
+            return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
 }

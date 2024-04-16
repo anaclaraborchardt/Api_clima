@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +23,12 @@ public class UserService {
     public User save(CreateUserDTO createUserDTO){
         User user = new User();
         BeanUtils.copyProperties(createUserDTO, user);
+        emailValidation(user);
+        for(User userFor : findAll()){
+            if(user.getEmail().equals(userFor.getEmail())){
+                throw new RuntimeException("This email already exists");
+            }
+        }
         return userRepository.save(user);
     }
 
@@ -77,5 +84,19 @@ public class UserService {
             }
         }
         throw new RuntimeException("User not found");
+    }
+
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    private void emailValidation(User user){
+        boolean validEmail = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+                .matcher(user.getEmail())
+                .find();
+
+        if (!validEmail) {
+            throw new RuntimeException("The given email isn't correct");
+        }
     }
 }
