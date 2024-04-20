@@ -57,6 +57,7 @@ public class UserService {
         }else {
             user.setPassword(userEdit.getPassword());
         }
+        emailValidation(user);
         return userRepository.save(user);
     }
 

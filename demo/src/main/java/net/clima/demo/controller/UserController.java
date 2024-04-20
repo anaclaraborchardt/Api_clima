@@ -19,7 +19,6 @@ public class UserController {
 
     @PostMapping
     private ResponseEntity<?> save(@RequestBody CreateUserDTO createUserDTO){
-        System.out.println("entrei");
         System.out.println(createUserDTO);
         try{
             return new ResponseEntity<>(userService.save(createUserDTO), HttpStatus.OK);
@@ -40,6 +39,7 @@ public class UserController {
 
     @PatchMapping
     private ResponseEntity<?> update(@RequestBody UserEditDTO user){
+        System.out.println("entreiiiiii");
         try{
             return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
         }catch(Exception e){
