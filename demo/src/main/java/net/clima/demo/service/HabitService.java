@@ -3,6 +3,7 @@ package net.clima.demo.service;
 import lombok.AllArgsConstructor;
 import net.clima.demo.model.ENUM.GoalKind;
 import net.clima.demo.model.dtos.HabitCreateDTO;
+import net.clima.demo.model.dtos.UpdateHabitInfo;
 import net.clima.demo.model.dtos.UpdateHabitKind;
 import net.clima.demo.model.entity.DailyGoal;
 import net.clima.demo.model.entity.GoalKindsValues.Quantity;
@@ -26,22 +27,38 @@ public class HabitService {
         return habitRepository.save(habits);
     }
 
-    public Habits findOne(Long id){
-        return habitRepository.findById(id).get();
+    public Habits findOne(Long habitId, Long userId){
+        System.out.println(habitRepository.findByIdAndUser_Id(habitId, userId));
+        return habitRepository.findByIdAndUser_Id(habitId, userId);
     }
 
     public List<Habits> findByUser(Long id){
         return habitRepository.findAllByUser_Id(id);
     }
 
+    public Habits findOne(Long habitId){
+        return habitRepository.findById(habitId).get();
+    }
+
     public void deleteHabit(Long id){
         habitRepository.deleteById(id);
     }
 
-    public void changeKind(UpdateHabitKind updateHabitKind){
-        Habits habit = findOne(updateHabitKind.getHabitId());
+    public void changeKind(GoalKind goalKind, Long id){
+        Habits habit = findOne(id);
         habit.setDailyGoalList(null);
-        habit.setGoalKind(updateHabitKind.getGoalKind());
+        habit.setGoalKind(goalKind);
         habitRepository.save(habit);
+    }
+
+    public Habits updateHabit(UpdateHabitInfo updateHabitInfo){
+        System.out.println("ut " + updateHabitInfo);
+        Habits habits = new Habits();
+        if(updateHabitInfo.getGoalKind() !=null) {
+            changeKind(updateHabitInfo.getGoalKind(), updateHabitInfo.getId());
+        }
+        BeanUtils.copyProperties(updateHabitInfo, habits);
+        habitRepository.save(habits);
+        return habits;
     }
 }

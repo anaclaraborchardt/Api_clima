@@ -1,9 +1,7 @@
 package net.clima.demo.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import net.clima.demo.model.ENUM.GoalKind;
-import net.clima.demo.model.dtos.UpdateHabit;
+import net.clima.demo.model.dtos.UpdateDailyGoal;
 import net.clima.demo.model.entity.DailyGoal;
 import net.clima.demo.model.entity.GoalKindsValues.BooleanType;
 import net.clima.demo.model.entity.GoalKindsValues.Quantity;
@@ -31,16 +29,13 @@ public class DailyGoalService {
         return dailyGoalRepository.findById(id).get();
     }
 
-    public DailyGoal update(UpdateHabit updateHabit){
+    public DailyGoal update(UpdateDailyGoal updateHabit){
         System.out.println(updateHabit);
         DailyGoal dailyGoal = findById(updateHabit.getDailyId());
         if(dailyGoal.getQuantity() != null) {
             if(updateHabit.getQuantity() !=null) {
                 Quantity quantity = dailyGoal.getQuantity();
                 quantity.setCurrentStatus(updateHabit.getQuantity().getCurrentStatus());
-                if (dailyGoal.getQuantity().getReference() != null) {
-                    quantity.setReference(updateHabit.getQuantity().getReference());
-                }
             }
         }else if(dailyGoal.getBooleanS() != null){
             if(updateHabit.getBooleanS() != null){

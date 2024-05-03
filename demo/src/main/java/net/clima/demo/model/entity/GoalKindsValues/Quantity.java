@@ -18,5 +18,5 @@ public class Quantity {
     private Long id;
     private Integer goal;
     private Integer currentStatus;
-    private String reference;
+
 }

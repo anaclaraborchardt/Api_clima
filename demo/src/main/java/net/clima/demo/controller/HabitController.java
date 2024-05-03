@@ -3,6 +3,7 @@ package net.clima.demo.controller;
 import lombok.AllArgsConstructor;
 import net.clima.demo.model.dtos.CreateUserDTO;
 import net.clima.demo.model.dtos.HabitCreateDTO;
+import net.clima.demo.model.dtos.UpdateHabitInfo;
 import net.clima.demo.model.dtos.UpdateHabitKind;
 import net.clima.demo.service.HabitService;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,15 @@ public class HabitController {
         }
     }
 
+    @GetMapping("/{habitId}/user/{userId}")
+    private ResponseEntity<?> getAllByUser(@PathVariable Long userId, @PathVariable Long habitId){
+        try{
+            return new ResponseEntity<>(habitService.findOne(habitId, userId), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
     @DeleteMapping("/{habitId}")
     private ResponseEntity<?> deleteHabit(@PathVariable Long habitId){
         try{
@@ -45,12 +55,12 @@ public class HabitController {
         }
     }
 
-    @PatchMapping
-    private ResponseEntity<?> changeKind(@RequestBody UpdateHabitKind updateHabitKind){
+    @PatchMapping("/update")
+    private ResponseEntity<?> updateHabitInfo(@RequestBody UpdateHabitInfo updateHabitInfo){
         try{
-            habitService.changeKind(updateHabitKind);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(habitService.updateHabit(updateHabitInfo), HttpStatus.OK);
         }catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }

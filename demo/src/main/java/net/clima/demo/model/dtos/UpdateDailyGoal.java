@@ -11,7 +11,7 @@ import net.clima.demo.model.entity.GoalKindsValues.Time;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UpdateHabit {
+public class UpdateDailyGoal {
 
     private Long dailyId;
     private Quantity quantity;

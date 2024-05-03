@@ -1,8 +1,7 @@
 package net.clima.demo.controller;
 
 import lombok.AllArgsConstructor;
-import net.clima.demo.model.dtos.HabitCreateDTO;
-import net.clima.demo.model.dtos.UpdateHabit;
+import net.clima.demo.model.dtos.UpdateDailyGoal;
 import net.clima.demo.model.entity.DailyGoal;
 import net.clima.demo.service.DailyGoalService;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,7 @@ public class DailyGoalController {
     }
 
     @PatchMapping("/current-status")
-    private ResponseEntity<?> updateQuantity(@RequestBody UpdateHabit updateHabit){
+    private ResponseEntity<?> updateQuantity(@RequestBody UpdateDailyGoal updateHabit){
         try{
             return new ResponseEntity<>(dailyGoalService.update(updateHabit), HttpStatus.OK);
         }catch(Exception e){
