@@ -1,6 +1,7 @@
 package net.clima.demo.service;
 
 import lombok.AllArgsConstructor;
+import net.clima.demo.model.ENUM.GoalKind;
 import net.clima.demo.model.dtos.UpdateDailyGoal;
 import net.clima.demo.model.entity.DailyGoal;
 import net.clima.demo.model.entity.GoalKindsValues.BooleanType;
@@ -8,6 +9,7 @@ import net.clima.demo.model.entity.GoalKindsValues.Quantity;
 import net.clima.demo.model.entity.GoalKindsValues.Time;
 import net.clima.demo.model.entity.Habits;
 import net.clima.demo.repository.DailyGoalRepository;
+import net.clima.demo.repository.HabitRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,10 +21,29 @@ import java.util.List;
 public class DailyGoalService {
 
     private DailyGoalRepository dailyGoalRepository;
-    private HabitService habitService;
-    public DailyGoal save(DailyGoal dailyGoal){
-        dailyGoal.setDay(LocalDateTime.now());
-        return dailyGoalRepository.save(dailyGoal);
+    private HabitRepository habitRepository;
+    public List<DailyGoal> save(DailyGoal dailyGoal, GoalKind kind) {
+        Habits habit = habitRepository.findById(dailyGoal.getHabit().getId()).get();
+
+        LocalDateTime startDate = LocalDateTime.now();
+        List<DailyGoal> createdGoals = new ArrayList<>();
+
+        for (LocalDateTime date = startDate; !date.isAfter(habit.getFinalDate()); date = date.plusDays(1)) {
+            DailyGoal goalForDay = new DailyGoal();
+            goalForDay.setHabit(habit);
+            goalForDay.setDay(date);
+
+            if(kind == GoalKind.quantidade){
+                goalForDay.setQuantity(dailyGoal.getQuantity());
+            } else if(kind == GoalKind.booleano){
+                goalForDay.setBooleanS(dailyGoal.getBooleanS());
+            } else if(kind == GoalKind.tempo){
+                goalForDay.setTime(dailyGoal.getTime());
+            }
+            createdGoals.add(dailyGoalRepository.save(goalForDay));
+        }
+
+        return createdGoals;
     }
 
     public DailyGoal findById(Long id){
@@ -38,10 +59,10 @@ public class DailyGoalService {
                 quantity.setCurrentStatus(updateHabit.getQuantity().getCurrentStatus());
             }
         }else if(dailyGoal.getBooleanS() != null){
-            if(updateHabit.getBooleanS() != null){
-                BooleanType booleanType = dailyGoal.getBooleanS();
-                booleanType.setCurrentStatus(updateHabit.getBooleanS().getCurrentStatus());
-            }
+//            if(updateHabit.getBooleanS() != null){
+//                BooleanType booleanType = dailyGoal.getBooleanS();
+//                booleanType.setCurrentStatus(updateHabit.getBooleanS());
+//            }
         }else {
             if(dailyGoal.getTime().getTimeReference() != null){
                 if(updateHabit.getTime() != null) {
@@ -67,7 +88,7 @@ public class DailyGoalService {
     }
 
     public List<Habits> getHabitsDoneInADay(Long userId){
-        List<Habits> habits = habitService.findByUser(userId);
+        List<Habits> habits = habitRepository.findAllByUser_Id(userId);
         List<Habits> completedHabits = new ArrayList<>();
 
         for(Habits habit1 : habits){

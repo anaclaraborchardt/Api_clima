@@ -4,12 +4,15 @@ import lombok.AllArgsConstructor;
 import net.clima.demo.model.ENUM.GoalKind;
 import net.clima.demo.model.dtos.HabitCreateDTO;
 import net.clima.demo.model.dtos.UpdateHabitInfo;
-import net.clima.demo.model.dtos.UpdateHabitKind;
 import net.clima.demo.model.entity.DailyGoal;
+import net.clima.demo.model.entity.GoalKindsValues.BooleanType;
 import net.clima.demo.model.entity.GoalKindsValues.Quantity;
+import net.clima.demo.model.entity.GoalKindsValues.Time;
 import net.clima.demo.model.entity.Habits;
-import net.clima.demo.model.entity.User;
+import net.clima.demo.repository.BooleanTypeRepository;
 import net.clima.demo.repository.HabitRepository;
+import net.clima.demo.repository.QuantityRepository;
+import net.clima.demo.repository.TimeRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +23,36 @@ import java.util.List;
 public class HabitService {
 
     private HabitRepository habitRepository;
+    private DailyGoalService dailyGoalService;
+    private final QuantityRepository quantityRepository;
+    private final BooleanTypeRepository booleanTypeRepository;
+    private final TimeRepository timeRepository;
 
     public Habits save(HabitCreateDTO habitCreateDTO){
         Habits habits = new Habits();
         BeanUtils.copyProperties(habitCreateDTO, habits);
-        return habitRepository.save(habits);
+        habitRepository.save(habits);
+        try {
+            if(habits.getGoalKind() == GoalKind.quantidade){
+                Integer goal = Integer.valueOf(habitCreateDTO.getGoal());
+                Quantity quantity = new Quantity(goal);
+                quantityRepository.save(quantity);
+                dailyGoalService.save(new DailyGoal(habits, quantity), GoalKind.quantidade);
+            } else if(habits.getGoalKind() == GoalKind.booleano){
+                boolean goal = Boolean.parseBoolean(habitCreateDTO.getGoal());
+                BooleanType booleanType = new BooleanType(goal);
+                booleanTypeRepository.save(booleanType);
+                dailyGoalService.save(new DailyGoal(habits, booleanType), GoalKind.booleano);
+            } else {
+                Integer goal = Integer.valueOf(habitCreateDTO.getGoal());
+                Time time = new Time(goal);
+                timeRepository.save(time);
+                dailyGoalService.save(new DailyGoal(habits, time), GoalKind.tempo);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return habits;
     }
 
     public Habits findOne(Long habitId, Long userId){

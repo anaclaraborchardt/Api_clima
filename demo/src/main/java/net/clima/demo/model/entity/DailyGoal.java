@@ -23,12 +23,28 @@ public class DailyGoal {
     private LocalDateTime day;
     @ManyToOne
     private Habits habit;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Quantity quantity;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Time time;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(cascade = CascadeType.ALL)
     private BooleanType booleanS;
     private boolean done;
+
+    public DailyGoal(Habits habit, Quantity quantity) {
+        this.habit = habit;
+        this.quantity = quantity;
+    }
+
+    public DailyGoal(Habits habit, BooleanType booleanType) {
+        this.habit = habit;
+        this.booleanS = booleanType;
+    }
+
+    public DailyGoal(Habits habit, Time time) {
+        this.habit = habit;
+        this.time = time;
+    }
+
 
 }

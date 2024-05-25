@@ -8,6 +8,7 @@ import net.clima.demo.model.ENUM.HabitCategory;
 import net.clima.demo.model.entity.DailyGoal;
 import net.clima.demo.model.entity.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,4 +21,6 @@ public class HabitCreateDTO {
     private User user;
     private GoalKind goalKind;
     private HabitCategory habitCategory;
+    private LocalDateTime finalDate;
+    private String goal;
 }

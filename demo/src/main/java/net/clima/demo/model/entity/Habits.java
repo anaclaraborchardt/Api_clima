@@ -32,5 +32,4 @@ public class Habits {
     private String color;
     //nome da unidade
     private String reference;
-
 }

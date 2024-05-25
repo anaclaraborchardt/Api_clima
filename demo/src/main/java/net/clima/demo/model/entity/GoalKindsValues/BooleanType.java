@@ -18,5 +18,10 @@ public class BooleanType{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private boolean goal;
-    private String currentStatus;
+    private boolean currentStatus;
+
+    public BooleanType(boolean goal) {
+        this.goal = goal;
+        this.currentStatus = false;
+    }
 }

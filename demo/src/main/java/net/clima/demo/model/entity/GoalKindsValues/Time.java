@@ -3,9 +3,7 @@ package net.clima.demo.model.entity.GoalKindsValues;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import net.clima.demo.model.ENUM.GoalKind;
 import net.clima.demo.model.ENUM.TimeEnum;
 
 import java.time.LocalDateTime;
@@ -19,9 +17,13 @@ public class Time{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime goal;
-    private LocalDateTime currentStatus;
+    private Integer goal;
+    private Integer currentStatus;
     @Enumerated(value = EnumType.STRING)
     private TimeEnum timeReference;
 
+    public Time(Integer goal) {
+        this.goal = goal;
+        this.currentStatus = 0;
+    }
 }

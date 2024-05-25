@@ -15,16 +15,16 @@ public class DailyGoalController {
 
     private final DailyGoalService dailyGoalService;
 
-    @PostMapping
-    private ResponseEntity<?> save(@RequestBody DailyGoal dailyGoal){
-        System.out.println(dailyGoal);
-        try{
-            return new ResponseEntity<>(dailyGoalService.save(dailyGoal), HttpStatus.OK);
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-    }
+//    @PostMapping
+//    private ResponseEntity<?> save(@RequestBody DailyGoal dailyGoal){
+//        System.out.println(dailyGoal);
+//        try{
+//            return new ResponseEntity<>(dailyGoalService.save(dailyGoal), HttpStatus.OK);
+//        }catch(Exception e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.CONFLICT);
+//        }
+//    }
 
     @PatchMapping("/current-status")
     private ResponseEntity<?> updateQuantity(@RequestBody UpdateDailyGoal updateHabit){

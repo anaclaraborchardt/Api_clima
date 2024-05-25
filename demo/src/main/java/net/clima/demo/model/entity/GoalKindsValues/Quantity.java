@@ -19,4 +19,8 @@ public class Quantity {
     private Integer goal;
     private Integer currentStatus;
 
+    public Quantity(Integer goal) {
+        this.goal = goal;
+        this.currentStatus = 0;
+    }
 }
