@@ -20,7 +20,7 @@ public class UpdateHabitInfo {
     private Long id;
     private String name;
     private HabitCategory habitCategory;
-    private LocalDateTime finalDate;
+    private String finalDate;
     private String color;
     private String reference;
     private GoalKind goalKind;

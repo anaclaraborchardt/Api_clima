@@ -8,6 +8,7 @@ import net.clima.demo.model.ENUM.GoalKind;
 import net.clima.demo.model.ENUM.HabitCategory;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor

@@ -16,6 +16,12 @@ import net.clima.demo.repository.TimeRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -79,13 +85,17 @@ public class HabitService {
         habitRepository.save(habit);
     }
 
-    public Habits updateHabit(UpdateHabitInfo updateHabitInfo){
+    public Habits updateHabit(UpdateHabitInfo updateHabitInfo) throws ParseException {
         System.out.println("ut " + updateHabitInfo);
-        Habits habits = new Habits();
+        Habits habits = findOne(updateHabitInfo.getId());
         if(updateHabitInfo.getGoalKind() !=null) {
             changeKind(updateHabitInfo.getGoalKind(), updateHabitInfo.getId());
         }
         BeanUtils.copyProperties(updateHabitInfo, habits);
+
+        LocalDateTime localDateTime = LocalDateTime.parse(updateHabitInfo.getFinalDate() + " 00:00:00.000000",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
+        habits.setFinalDate(localDateTime);
         habitRepository.save(habits);
         return habits;
     }

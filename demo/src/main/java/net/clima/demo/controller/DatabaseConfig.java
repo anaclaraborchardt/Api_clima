@@ -19,15 +19,15 @@ public class DatabaseConfig {
     private final HabitRepository habitRepository;
     @PostConstruct
     public void init(){
-        Habits habit = new Habits();
-        try {
-            habit.setName("Beber água");
-            habit.setUser(userService.findOne(1L));
-            habit.setColor("Azul");
-
-            habitRepository.save(habit);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+//        Habits habit = new Habits();
+//        try {
+//            habit.setName("Beber água");
+//            habit.setUser(userService.findOne(1L));
+//            habit.setColor("Azul");
+//
+//            habitRepository.save(habit);
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
     }
 }

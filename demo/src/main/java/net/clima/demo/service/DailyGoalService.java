@@ -28,20 +28,20 @@ public class DailyGoalService {
         LocalDateTime startDate = LocalDateTime.now();
         List<DailyGoal> createdGoals = new ArrayList<>();
 
-        for (LocalDateTime date = startDate; !date.isAfter(habit.getFinalDate()); date = date.plusDays(1)) {
-            DailyGoal goalForDay = new DailyGoal();
-            goalForDay.setHabit(habit);
-            goalForDay.setDay(date);
-
-            if(kind == GoalKind.quantidade){
-                goalForDay.setQuantity(dailyGoal.getQuantity());
-            } else if(kind == GoalKind.booleano){
-                goalForDay.setBooleanS(dailyGoal.getBooleanS());
-            } else if(kind == GoalKind.tempo){
-                goalForDay.setTime(dailyGoal.getTime());
-            }
-            createdGoals.add(dailyGoalRepository.save(goalForDay));
-        }
+//        for (LocalDateTime date = startDate; !date.isAfter(habit.getFinalDate()); date = date.plusDays(1)) {
+//            DailyGoal goalForDay = new DailyGoal();
+//            goalForDay.setHabit(habit);
+//            goalForDay.setDay(date);
+//
+//            if(kind == GoalKind.quantidade){
+//                goalForDay.setQuantity(dailyGoal.getQuantity());
+//            } else if(kind == GoalKind.booleano){
+//                goalForDay.setBooleanS(dailyGoal.getBooleanS());
+//            } else if(kind == GoalKind.tempo){
+//                goalForDay.setTime(dailyGoal.getTime());
+//            }
+//            createdGoals.add(dailyGoalRepository.save(goalForDay));
+//        }
 
         return createdGoals;
     }
