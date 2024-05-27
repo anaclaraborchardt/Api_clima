@@ -30,9 +30,6 @@ public class HabitService {
 
     private HabitRepository habitRepository;
     private DailyGoalService dailyGoalService;
-    private final QuantityRepository quantityRepository;
-    private final BooleanTypeRepository booleanTypeRepository;
-    private final TimeRepository timeRepository;
 
     public Habits save(HabitCreateDTO habitCreateDTO){
         Habits habits = new Habits();
@@ -40,20 +37,9 @@ public class HabitService {
         habitRepository.save(habits);
         try {
             if(habits.getGoalKind() == GoalKind.quantidade){
-                Integer goal = Integer.valueOf(habitCreateDTO.getGoal());
-                Quantity quantity = new Quantity(goal);
-                quantityRepository.save(quantity);
-                dailyGoalService.save(new DailyGoal(habits, quantity), GoalKind.quantidade);
+                dailyGoalService.save(new DailyGoal(habits), GoalKind.quantidade, habitCreateDTO);
             } else if(habits.getGoalKind() == GoalKind.booleano){
-                boolean goal = Boolean.parseBoolean(habitCreateDTO.getGoal());
-                BooleanType booleanType = new BooleanType(goal);
-                booleanTypeRepository.save(booleanType);
-                dailyGoalService.save(new DailyGoal(habits, booleanType), GoalKind.booleano);
-            } else {
-                Integer goal = Integer.valueOf(habitCreateDTO.getGoal());
-                Time time = new Time(goal);
-                timeRepository.save(time);
-                dailyGoalService.save(new DailyGoal(habits, time), GoalKind.tempo);
+                dailyGoalService.save(new DailyGoal(habits), GoalKind.booleano, habitCreateDTO);
             }
         }catch (Exception e){
             e.printStackTrace();

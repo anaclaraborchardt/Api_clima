@@ -2,14 +2,17 @@ package net.clima.demo.service;
 
 import lombok.AllArgsConstructor;
 import net.clima.demo.model.ENUM.GoalKind;
+import net.clima.demo.model.dtos.HabitCreateDTO;
 import net.clima.demo.model.dtos.UpdateDailyGoal;
 import net.clima.demo.model.entity.DailyGoal;
 import net.clima.demo.model.entity.GoalKindsValues.BooleanType;
 import net.clima.demo.model.entity.GoalKindsValues.Quantity;
 import net.clima.demo.model.entity.GoalKindsValues.Time;
 import net.clima.demo.model.entity.Habits;
+import net.clima.demo.repository.BooleanTypeRepository;
 import net.clima.demo.repository.DailyGoalRepository;
 import net.clima.demo.repository.HabitRepository;
+import net.clima.demo.repository.QuantityRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,28 +25,31 @@ public class DailyGoalService {
 
     private DailyGoalRepository dailyGoalRepository;
     private HabitRepository habitRepository;
-    public List<DailyGoal> save(DailyGoal dailyGoal, GoalKind kind) {
+    private final QuantityRepository quantityRepository;
+    private final BooleanTypeRepository booleanTypeRepository;
+    public void save(DailyGoal dailyGoal, GoalKind kind, HabitCreateDTO habitCreateDTO) {
         Habits habit = habitRepository.findById(dailyGoal.getHabit().getId()).get();
 
         LocalDateTime startDate = LocalDateTime.now();
-        List<DailyGoal> createdGoals = new ArrayList<>();
 
-//        for (LocalDateTime date = startDate; !date.isAfter(habit.getFinalDate()); date = date.plusDays(1)) {
-//            DailyGoal goalForDay = new DailyGoal();
-//            goalForDay.setHabit(habit);
-//            goalForDay.setDay(date);
-//
-//            if(kind == GoalKind.quantidade){
-//                goalForDay.setQuantity(dailyGoal.getQuantity());
-//            } else if(kind == GoalKind.booleano){
-//                goalForDay.setBooleanS(dailyGoal.getBooleanS());
-//            } else if(kind == GoalKind.tempo){
-//                goalForDay.setTime(dailyGoal.getTime());
-//            }
-//            createdGoals.add(dailyGoalRepository.save(goalForDay));
-//        }
+        for (LocalDateTime date = startDate; !date.isAfter(habit.getFinalDate()); date = date.plusDays(1)) {
+            DailyGoal goalForDay = new DailyGoal();
+            goalForDay.setHabit(habit);
+            goalForDay.setDay(date);
 
-        return createdGoals;
+            if(kind == GoalKind.quantidade){
+                Integer goal = Integer.valueOf(habitCreateDTO.getGoal());
+                Quantity quantity = quantityRepository.save(new Quantity(goal));
+                goalForDay.setQuantity(quantity);
+            } else if(kind == GoalKind.booleano){
+                boolean goal = Boolean.parseBoolean(habitCreateDTO.getGoal());
+                BooleanType bool = booleanTypeRepository.save(new BooleanType(goal));
+                goalForDay.setBooleanS(bool);
+            } else if(kind == GoalKind.tempo){
+                goalForDay.setTime(dailyGoal.getTime());
+            }
+            dailyGoalRepository.save(goalForDay);
+        }
     }
 
     public DailyGoal findById(Long id){

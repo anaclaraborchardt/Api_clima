@@ -31,20 +31,12 @@ public class DailyGoal {
     private BooleanType booleanS;
     private boolean done;
 
-    public DailyGoal(Habits habit, Quantity quantity) {
+    public DailyGoal(Habits habit) {
         this.habit = habit;
-        this.quantity = quantity;
     }
 
-    public DailyGoal(Habits habit, BooleanType booleanType) {
-        this.habit = habit;
-        this.booleanS = booleanType;
-    }
 
-    public DailyGoal(Habits habit, Time time) {
-        this.habit = habit;
-        this.time = time;
-    }
+
 
 
 }

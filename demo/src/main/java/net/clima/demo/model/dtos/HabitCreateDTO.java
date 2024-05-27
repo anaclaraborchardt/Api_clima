@@ -23,4 +23,6 @@ public class HabitCreateDTO {
     private HabitCategory habitCategory;
     private LocalDateTime finalDate;
     private String goal;
+    private String reference;
+    private String color;
 }
