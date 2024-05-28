@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +28,7 @@ public class DailyGoalService {
     private HabitRepository habitRepository;
     private final QuantityRepository quantityRepository;
     private final BooleanTypeRepository booleanTypeRepository;
+
     public void save(DailyGoal dailyGoal, GoalKind kind, HabitCreateDTO habitCreateDTO) {
         Habits habit = habitRepository.findById(dailyGoal.getHabit().getId()).get();
 
@@ -37,74 +39,69 @@ public class DailyGoalService {
             goalForDay.setHabit(habit);
             goalForDay.setDay(date);
 
-            if(kind == GoalKind.quantidade){
+            if (kind == GoalKind.quantidade) {
                 Integer goal = Integer.valueOf(habitCreateDTO.getGoal());
                 Quantity quantity = quantityRepository.save(new Quantity(goal));
                 goalForDay.setQuantity(quantity);
-            } else if(kind == GoalKind.booleano){
+            } else if (kind == GoalKind.booleano) {
                 boolean goal = Boolean.parseBoolean(habitCreateDTO.getGoal());
                 BooleanType bool = booleanTypeRepository.save(new BooleanType(goal));
                 goalForDay.setBooleanS(bool);
-            } else if(kind == GoalKind.tempo){
+            } else if (kind == GoalKind.tempo) {
                 goalForDay.setTime(dailyGoal.getTime());
             }
             dailyGoalRepository.save(goalForDay);
         }
     }
 
-    public DailyGoal findById(Long id){
+    public DailyGoal findById(Long id) {
         return dailyGoalRepository.findById(id).get();
     }
 
-    public DailyGoal update(UpdateDailyGoal updateHabit){
-        System.out.println(updateHabit);
-        DailyGoal dailyGoal = findById(updateHabit.getDailyId());
-        if(dailyGoal.getQuantity() != null) {
-            if(updateHabit.getQuantity() !=null) {
-                Quantity quantity = dailyGoal.getQuantity();
-                quantity.setCurrentStatus(updateHabit.getQuantity().getCurrentStatus());
-            }
-        }else if(dailyGoal.getBooleanS() != null){
-//            if(updateHabit.getBooleanS() != null){
-//                BooleanType booleanType = dailyGoal.getBooleanS();
-//                booleanType.setCurrentStatus(updateHabit.getBooleanS());
-//            }
-        }else {
-            if(dailyGoal.getTime().getTimeReference() != null){
-                if(updateHabit.getTime() != null) {
-                    Time time = dailyGoal.getTime();
-                    time.setCurrentStatus(updateHabit.getTime().getCurrentStatus());
+    public void update(UpdateDailyGoal updateHabit) {
+        System.out.println(updateHabit.getHabitId());
+        for (DailyGoal daily : dailyGoalRepository.findAll()) {
+            if (Objects.equals(daily.getHabit().getId(), updateHabit.getHabitId())) {
+                if (daily.getQuantity() != null) {
+                    daily.getQuantity().setGoal(Integer.valueOf(updateHabit.getNewGoal()));
+                    quantityRepository.save(daily.getQuantity());
+                } else if (daily.getBooleanS() != null) {
+                    daily.getBooleanS().setGoal(Boolean.parseBoolean(updateHabit.getNewGoal()));
+                    booleanTypeRepository.save(daily.getBooleanS());
                 }
             }
         }
-        setAsDone(dailyGoal);
-        return dailyGoalRepository.save(dailyGoal);
     }
 
-    public void setAsDone(DailyGoal dailyGoal){
-        if(dailyGoal.getQuantity() != null){
-            if(dailyGoal.getQuantity().getCurrentStatus().equals(dailyGoal.getQuantity().getGoal())) {
+    public void setAsDone(DailyGoal dailyGoal) {
+        if (dailyGoal.getQuantity() != null) {
+            if (dailyGoal.getQuantity().getCurrentStatus().equals(dailyGoal.getQuantity().getGoal())) {
                 dailyGoal.setDone(true);
             }
-        }else if(dailyGoal.getTime() != null){
-            if(dailyGoal.getTime().getCurrentStatus() == dailyGoal.getTime().getGoal()) {
+        } else if (dailyGoal.getTime() != null) {
+            if (dailyGoal.getTime().getCurrentStatus() == dailyGoal.getTime().getGoal()) {
                 dailyGoal.setDone(true);
             }
         }
     }
 
-    public List<Habits> getHabitsDoneInADay(Long userId){
+    public List<Habits> getHabitsDoneInADay(Long userId) {
         List<Habits> habits = habitRepository.findAllByUser_Id(userId);
         List<Habits> completedHabits = new ArrayList<>();
 
-        for(Habits habit1 : habits){
-            for(DailyGoal dailyGoal : habit1.getDailyGoalList()){
-                if(dailyGoal.getDay().getDayOfMonth() == LocalDateTime.now().getDayOfMonth()){
+        for (Habits habit1 : habits) {
+            for (DailyGoal dailyGoal : habit1.getDailyGoalList()) {
+                if (dailyGoal.getDay().getDayOfMonth() == LocalDateTime.now().getDayOfMonth()) {
                     completedHabits.add(habit1);
                 }
             }
         }
         return completedHabits;
+    }
+
+    public List<DailyGoal> getAll(Long id) {
+        System.out.println("dg" + id);
+        return dailyGoalRepository.findDailyGoalByHabit_Id(id);
     }
 
 }

@@ -13,9 +13,7 @@ import net.clima.demo.model.entity.GoalKindsValues.Time;
 @Data
 public class UpdateDailyGoal {
 
-    private Long dailyId;
-    private Quantity quantity;
-    private Time time;
-    private BooleanType booleanS;
+    private Long habitId;
+    private String newGoal;
 
 }

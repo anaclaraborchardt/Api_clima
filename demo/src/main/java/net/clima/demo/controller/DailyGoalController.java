@@ -15,21 +15,11 @@ public class DailyGoalController {
 
     private final DailyGoalService dailyGoalService;
 
-//    @PostMapping
-//    private ResponseEntity<?> save(@RequestBody DailyGoal dailyGoal){
-//        System.out.println(dailyGoal);
-//        try{
-//            return new ResponseEntity<>(dailyGoalService.save(dailyGoal), HttpStatus.OK);
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            return new ResponseEntity<>(HttpStatus.CONFLICT);
-//        }
-//    }
-
-    @PatchMapping("/current-status")
-    private ResponseEntity<?> updateQuantity(@RequestBody UpdateDailyGoal updateHabit){
+    @PatchMapping("/update-goal")
+    private ResponseEntity<?> updateGoal(@RequestBody UpdateDailyGoal updateHabit){
         try{
-            return new ResponseEntity<>(dailyGoalService.update(updateHabit), HttpStatus.OK);
+            dailyGoalService.update(updateHabit);
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -41,6 +31,16 @@ public class DailyGoalController {
         try{
             return new ResponseEntity<>(dailyGoalService.getHabitsDoneInADay(userId), HttpStatus.OK);
         }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @GetMapping("/{habitId}")
+    private ResponseEntity<?> findAll(@PathVariable Long habitId){
+        try{
+            return new ResponseEntity<>(dailyGoalService.getAll(habitId), HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }

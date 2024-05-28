@@ -48,7 +48,6 @@ public class HabitService {
     }
 
     public Habits findOne(Long habitId, Long userId){
-        System.out.println(habitRepository.findByIdAndUser_Id(habitId, userId));
         return habitRepository.findByIdAndUser_Id(habitId, userId);
     }
 
@@ -72,7 +71,6 @@ public class HabitService {
     }
 
     public Habits updateHabit(UpdateHabitInfo updateHabitInfo) throws ParseException {
-        System.out.println("ut " + updateHabitInfo);
         Habits habits = findOne(updateHabitInfo.getId());
         if(updateHabitInfo.getGoalKind() !=null) {
             changeKind(updateHabitInfo.getGoalKind(), updateHabitInfo.getId());
