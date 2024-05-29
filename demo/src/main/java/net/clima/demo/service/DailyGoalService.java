@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import net.clima.demo.model.ENUM.GoalKind;
 import net.clima.demo.model.dtos.HabitCreateDTO;
 import net.clima.demo.model.dtos.UpdateDailyGoal;
+import net.clima.demo.model.dtos.UpdateQuantity;
 import net.clima.demo.model.entity.DailyGoal;
 import net.clima.demo.model.entity.GoalKindsValues.BooleanType;
 import net.clima.demo.model.entity.GoalKindsValues.Quantity;
@@ -74,15 +75,10 @@ public class DailyGoalService {
     }
 
     public void setAsDone(DailyGoal dailyGoal) {
-        if (dailyGoal.getQuantity() != null) {
-            if (dailyGoal.getQuantity().getCurrentStatus().equals(dailyGoal.getQuantity().getGoal())) {
-                dailyGoal.setDone(true);
-            }
-        } else if (dailyGoal.getTime() != null) {
-            if (dailyGoal.getTime().getCurrentStatus() == dailyGoal.getTime().getGoal()) {
-                dailyGoal.setDone(true);
-            }
-        }
+       if (dailyGoal.getQuantity().getCurrentStatus().equals(dailyGoal.getQuantity().getGoal())) {
+           dailyGoal.setDone(true);
+           dailyGoalRepository.save(dailyGoal);
+       }
     }
 
     public List<Habits> getHabitsDoneInADay(Long userId) {
@@ -102,6 +98,17 @@ public class DailyGoalService {
     public List<DailyGoal> getAll(Long id) {
         System.out.println("dg" + id);
         return dailyGoalRepository.findDailyGoalByHabit_Id(id);
+    }
+
+    public DailyGoal findOne(Long dailyId){
+        return dailyGoalRepository.findById(dailyId).get();
+    }
+
+    public void updateQuantity(UpdateQuantity updateQuantity){
+        DailyGoal dailyGoal = findOne(updateQuantity.getId());
+        dailyGoal.getQuantity().setCurrentStatus(updateQuantity.getNewQuantity());
+        quantityRepository.save(dailyGoal.getQuantity());
+        setAsDone(dailyGoal);
     }
 
 }

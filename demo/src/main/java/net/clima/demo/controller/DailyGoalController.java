@@ -2,6 +2,7 @@ package net.clima.demo.controller;
 
 import lombok.AllArgsConstructor;
 import net.clima.demo.model.dtos.UpdateDailyGoal;
+import net.clima.demo.model.dtos.UpdateQuantity;
 import net.clima.demo.model.entity.DailyGoal;
 import net.clima.demo.service.DailyGoalService;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,27 @@ public class DailyGoalController {
     private ResponseEntity<?> findAll(@PathVariable Long habitId){
         try{
             return new ResponseEntity<>(dailyGoalService.getAll(habitId), HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @GetMapping("/daily/{dailyId}")
+    private ResponseEntity<?> findOne(@PathVariable Long dailyId){
+        try{
+            return new ResponseEntity<>(dailyGoalService.findOne(dailyId), HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @PatchMapping("/quantity")
+    private ResponseEntity<?> updateQuantity(@RequestBody UpdateQuantity updateQuantity){
+        try{
+            dailyGoalService.updateQuantity(updateQuantity);
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.CONFLICT);
