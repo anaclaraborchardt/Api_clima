@@ -111,4 +111,20 @@ public class DailyGoalService {
         setAsDone(dailyGoal);
     }
 
+    public DailyGoal findByDayAndHabit(Integer day, Integer month, Long id){
+        System.out.println("day " + day);
+        System.out.println("month " + month);
+        System.out.println("id "+ id);
+        for(DailyGoal dailyGoal : dailyGoalRepository.findAll()){
+            if(dailyGoal.getDay().getDayOfMonth() == day){
+                if(dailyGoal.getDay().getMonthValue() == month){
+                    if(dailyGoal.getHabit().getId().equals(id)) {
+                        return dailyGoal;
+                    }
+                }
+            }
+        }
+        throw new RuntimeException("No dailyGoal for this habit in this day");
+    }
+
 }
