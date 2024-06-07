@@ -1,6 +1,7 @@
 package net.clima.demo.controller;
 
 import lombok.AllArgsConstructor;
+import net.clima.demo.model.dtos.UpdateBoolean;
 import net.clima.demo.model.dtos.UpdateDailyGoal;
 import net.clima.demo.model.dtos.UpdateQuantity;
 import net.clima.demo.model.entity.DailyGoal;
@@ -60,6 +61,28 @@ public class DailyGoalController {
     private ResponseEntity<?> updateQuantity(@RequestBody UpdateQuantity updateQuantity){
         try{
             dailyGoalService.updateQuantity(updateQuantity);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @PatchMapping("/boolean")
+    private ResponseEntity<?> updateQuantity(@RequestBody UpdateBoolean updateBoolean){
+        try{
+            dailyGoalService.updateBoolean(updateBoolean);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @PatchMapping("/done/{dailyId}")
+    private ResponseEntity<?> setAsDone(@PathVariable Long dailyId){
+        try{
+            dailyGoalService.setAsDone(dailyId);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch(Exception e){
             e.printStackTrace();
