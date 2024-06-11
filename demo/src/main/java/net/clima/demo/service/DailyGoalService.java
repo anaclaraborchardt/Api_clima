@@ -122,12 +122,16 @@ public class DailyGoalService {
     }
 
     public void setAsDone(Long dailyId){
+        System.out.println(dailyId);
         DailyGoal daily = dailyGoalRepository.findById(dailyId).get();
         if(daily.getQuantity() != null){
             daily.getQuantity().setCurrentStatus(daily.getQuantity().getGoal());
+            quantityRepository.save(daily.getQuantity());
         } else {
             daily.getBooleanS().setCurrentStatus(daily.getBooleanS().isCurrentStatus());
         }
+        daily.setDone(true);
+        dailyGoalRepository.save(daily);
     }
 
     public DailyGoal findByDayAndHabit(Integer day, Integer month, Long id) {
@@ -141,6 +145,22 @@ public class DailyGoalService {
             }
         }
         throw new RuntimeException("No dailyGoal for this habit in this day");
+    }
+
+    public List<DailyGoal> findAllByDay(Integer day, Integer month){
+        List<DailyGoal> dailies = new ArrayList<>();
+        for (DailyGoal dailyGoal : dailyGoalRepository.findAll()) {
+            if (dailyGoal.getDay().getDayOfMonth() == day) {
+                if (dailyGoal.getDay().getMonthValue() == month) {
+                    dailies.add(dailyGoal);
+                }
+            }
+        }
+        return dailies;
+    }
+
+    public void delete(DailyGoal dailyGoal){
+        dailyGoalRepository.delete(dailyGoal);
     }
 
 }

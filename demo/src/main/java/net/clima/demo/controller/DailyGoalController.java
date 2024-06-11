@@ -99,4 +99,14 @@ public class DailyGoalController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
+
+    @GetMapping("/day/{day}/month/{month}")
+    private ResponseEntity<?> findAllByDate(@PathVariable Integer day, @PathVariable Integer month){
+        try{
+            return new ResponseEntity<>(dailyGoalService.findAllByDay(day, month), HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
 }
