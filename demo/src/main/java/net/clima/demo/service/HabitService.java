@@ -32,8 +32,12 @@ public class HabitService {
     private DailyGoalService dailyGoalService;
 
     public Habits save(HabitCreateDTO habitCreateDTO){
+        LocalDateTime localDateTime = LocalDateTime.parse(habitCreateDTO.getFinalDate() + " 00:00:00.000000",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
+        System.out.println("Estou criando hábito");
         Habits habits = new Habits();
         BeanUtils.copyProperties(habitCreateDTO, habits);
+        habits.setFinalDate(localDateTime);
         habitRepository.save(habits);
         try {
             if(habits.getGoalKind() == GoalKind.quantidade){

@@ -29,6 +29,7 @@ public class UserService {
                 throw new RuntimeException("This email already exists");
             }
         }
+        System.out.println("entrei");
         return userRepository.save(user);
     }
 

@@ -19,10 +19,10 @@ public class HabitCreateDTO {
     private String name;
     private List<DailyGoal> goalsList;
     private User user;
-    private GoalKind goalKind;
+    private GoalKind goalKind; //
     private HabitCategory habitCategory;
-    private LocalDateTime finalDate;
-    private String goal;
+    private String finalDate;
+    private String goal; // meta -> json normal
     private String reference;
     private String color;
 }
