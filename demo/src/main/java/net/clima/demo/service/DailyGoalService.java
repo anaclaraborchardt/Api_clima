@@ -3,6 +3,7 @@ package net.clima.demo.service;
 import lombok.AllArgsConstructor;
 import net.clima.demo.model.ENUM.GoalKind;
 import net.clima.demo.model.dtos.HabitCreateDTO;
+import net.clima.demo.model.dtos.UpdateBoolean;
 import net.clima.demo.model.dtos.UpdateDailyGoal;
 import net.clima.demo.model.dtos.UpdateQuantity;
 import net.clima.demo.model.entity.DailyGoal;
@@ -75,10 +76,12 @@ public class DailyGoalService {
     }
 
     public void setAsDone(DailyGoal dailyGoal) {
-       if (dailyGoal.getQuantity().getCurrentStatus().equals(dailyGoal.getQuantity().getGoal())) {
-           dailyGoal.setDone(true);
-           dailyGoalRepository.save(dailyGoal);
-       }
+        if (dailyGoal.getQuantity() != null) {
+            if (dailyGoal.getQuantity().getCurrentStatus().equals(dailyGoal.getQuantity().getGoal())) {
+                dailyGoal.setDone(true);
+                dailyGoalRepository.save(dailyGoal);
+            }
+        }
     }
 
     public List<Habits> getHabitsDoneInADay(Long userId) {
@@ -100,31 +103,64 @@ public class DailyGoalService {
         return dailyGoalRepository.findDailyGoalByHabit_Id(id);
     }
 
-    public DailyGoal findOne(Long dailyId){
+    public DailyGoal findOne(Long dailyId) {
         return dailyGoalRepository.findById(dailyId).get();
     }
 
-    public void updateQuantity(UpdateQuantity updateQuantity){
+    public void updateQuantity(UpdateQuantity updateQuantity) {
         DailyGoal dailyGoal = findOne(updateQuantity.getId());
         dailyGoal.getQuantity().setCurrentStatus(updateQuantity.getNewQuantity());
         quantityRepository.save(dailyGoal.getQuantity());
         setAsDone(dailyGoal);
     }
 
-    public DailyGoal findByDayAndHabit(Integer day, Integer month, Long id){
-        System.out.println("day " + day);
-        System.out.println("month " + month);
-        System.out.println("id "+ id);
-        for(DailyGoal dailyGoal : dailyGoalRepository.findAll()){
-            if(dailyGoal.getDay().getDayOfMonth() == day){
-                if(dailyGoal.getDay().getMonthValue() == month){
-                    if(dailyGoal.getHabit().getId().equals(id)) {
+    public void updateBoolean(UpdateBoolean updateBoolean) {
+        DailyGoal dailyGoal = findOne(updateBoolean.getId());
+        dailyGoal.getBooleanS().setCurrentStatus(updateBoolean.getNewBool());
+        booleanTypeRepository.save(dailyGoal.getBooleanS());
+        setAsDone(dailyGoal);
+    }
+
+    public void setAsDone(Long dailyId){
+        System.out.println(dailyId);
+        DailyGoal daily = dailyGoalRepository.findById(dailyId).get();
+        if(daily.getQuantity() != null){
+            daily.getQuantity().setCurrentStatus(daily.getQuantity().getGoal());
+            quantityRepository.save(daily.getQuantity());
+        } else {
+            daily.getBooleanS().setCurrentStatus(daily.getBooleanS().isCurrentStatus());
+        }
+        daily.setDone(true);
+        dailyGoalRepository.save(daily);
+    }
+
+    public DailyGoal findByDayAndHabit(Integer day, Integer month, Long id) {
+        for (DailyGoal dailyGoal : dailyGoalRepository.findAll()) {
+            if (dailyGoal.getDay().getDayOfMonth() == day) {
+                if (dailyGoal.getDay().getMonthValue() == month) {
+                    if (dailyGoal.getHabit().getId().equals(id)) {
                         return dailyGoal;
                     }
                 }
             }
         }
         throw new RuntimeException("No dailyGoal for this habit in this day");
+    }
+
+    public List<DailyGoal> findAllByDay(Integer day, Integer month){
+        List<DailyGoal> dailies = new ArrayList<>();
+        for (DailyGoal dailyGoal : dailyGoalRepository.findAll()) {
+            if (dailyGoal.getDay().getDayOfMonth() == day) {
+                if (dailyGoal.getDay().getMonthValue() == month) {
+                    dailies.add(dailyGoal);
+                }
+            }
+        }
+        return dailies;
+    }
+
+    public void delete(DailyGoal dailyGoal){
+        dailyGoalRepository.delete(dailyGoal);
     }
 
 }

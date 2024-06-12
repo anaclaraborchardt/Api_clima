@@ -1,6 +1,7 @@
 package net.clima.demo.controller;
 
 import lombok.AllArgsConstructor;
+import net.clima.demo.model.dtos.UpdateBoolean;
 import net.clima.demo.model.dtos.UpdateDailyGoal;
 import net.clima.demo.model.dtos.UpdateQuantity;
 import net.clima.demo.model.entity.DailyGoal;
@@ -67,10 +68,42 @@ public class DailyGoalController {
         }
     }
 
+    @PatchMapping("/boolean")
+    private ResponseEntity<?> updateQuantity(@RequestBody UpdateBoolean updateBoolean){
+        try{
+            dailyGoalService.updateBoolean(updateBoolean);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @PatchMapping("/done/{dailyId}")
+    private ResponseEntity<?> setAsDone(@PathVariable Long dailyId){
+        try{
+            dailyGoalService.setAsDone(dailyId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
     @GetMapping("/{day}/{month}/habit/{habit}")
     private ResponseEntity<?> findByDate(@PathVariable Integer day, @PathVariable Integer month, @PathVariable Long habit){
         try{
             return new ResponseEntity<>(dailyGoalService.findByDayAndHabit(day, month, habit), HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @GetMapping("/day/{day}/month/{month}")
+    private ResponseEntity<?> findAllByDate(@PathVariable Integer day, @PathVariable Integer month){
+        try{
+            return new ResponseEntity<>(dailyGoalService.findAllByDay(day, month), HttpStatus.OK);
         }catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.CONFLICT);

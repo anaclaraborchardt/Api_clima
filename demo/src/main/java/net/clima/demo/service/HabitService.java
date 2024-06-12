@@ -64,6 +64,9 @@ public class HabitService {
     }
 
     public void deleteHabit(Long id){
+        for(DailyGoal dailyGoal : dailyGoalService.getAll(id)){
+            dailyGoalService.delete(dailyGoal);
+        }
         habitRepository.deleteById(id);
     }
 
@@ -87,4 +90,5 @@ public class HabitService {
         habitRepository.save(habits);
         return habits;
     }
+
 }
