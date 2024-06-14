@@ -27,7 +27,7 @@ public class Habits {
     private GoalKind goalKind;
     @Enumerated(value = EnumType.STRING)
     private HabitCategory habitCategory;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<DailyGoal> dailyGoalList;
     private LocalDateTime finalDate;
     private String color;
