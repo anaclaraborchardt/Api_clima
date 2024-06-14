@@ -23,7 +23,7 @@ public class DailyGoal {
     private LocalDateTime day;
     @ManyToOne
     private Habits habit;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Quantity quantity;
     @ManyToOne(cascade = CascadeType.ALL)
     private Time time;

@@ -32,26 +32,29 @@ public class DailyGoalService {
     private final BooleanTypeRepository booleanTypeRepository;
 
     public void save(DailyGoal dailyGoal, GoalKind kind, HabitCreateDTO habitCreateDTO) {
-        Habits habit = habitRepository.findById(dailyGoal.getHabit().getId()).get();
-
+        Habits habit = habitRepository.findById(dailyGoal.getHabit().getId()).orElseThrow();
         LocalDateTime startDate = LocalDateTime.now();
 
         for (LocalDateTime date = startDate; !date.isAfter(habit.getFinalDate()); date = date.plusDays(1)) {
             DailyGoal goalForDay = new DailyGoal();
             goalForDay.setHabit(habit);
             goalForDay.setDay(date);
+            dailyGoalRepository.save(goalForDay);
 
             if (kind == GoalKind.quantidade) {
                 Integer goal = Integer.valueOf(habitCreateDTO.getGoal());
-                Quantity quantity = quantityRepository.save(new Quantity(goal));
+                Quantity quantity = new Quantity(goal);
+                quantity = quantityRepository.save(quantity);
                 goalForDay.setQuantity(quantity);
             } else if (kind == GoalKind.booleano) {
                 boolean goal = Boolean.parseBoolean(habitCreateDTO.getGoal());
-                BooleanType bool = booleanTypeRepository.save(new BooleanType(goal));
+                BooleanType bool = new BooleanType(goal);
+                bool = booleanTypeRepository.save(bool);
                 goalForDay.setBooleanS(bool);
             } else if (kind == GoalKind.tempo) {
                 goalForDay.setTime(dailyGoal.getTime());
             }
+
             dailyGoalRepository.save(goalForDay);
         }
     }
@@ -61,7 +64,6 @@ public class DailyGoalService {
     }
 
     public void update(UpdateDailyGoal updateHabit) {
-        System.out.println(updateHabit.getHabitId());
         for (DailyGoal daily : dailyGoalRepository.findAll()) {
             if (Objects.equals(daily.getHabit().getId(), updateHabit.getHabitId())) {
                 if (daily.getQuantity() != null) {
@@ -99,7 +101,6 @@ public class DailyGoalService {
     }
 
     public List<DailyGoal> getAll(Long id) {
-        System.out.println("dg" + id);
         return dailyGoalRepository.findDailyGoalByHabit_Id(id);
     }
 
@@ -122,7 +123,6 @@ public class DailyGoalService {
     }
 
     public void setAsDone(Long dailyId){
-        System.out.println(dailyId);
         DailyGoal daily = dailyGoalRepository.findById(dailyId).get();
         if(daily.getQuantity() != null){
             daily.getQuantity().setCurrentStatus(daily.getQuantity().getGoal());

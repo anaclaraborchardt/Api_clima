@@ -39,7 +39,6 @@ public class UserController {
 
     @PatchMapping
     private ResponseEntity<?> update(@RequestBody UserEditDTO user){
-        System.out.println("entreiiiiii");
         try{
             return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
         }catch(Exception e){
@@ -58,19 +57,15 @@ public class UserController {
 
     @PostMapping("/login")
     private ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO){
-        System.out.println("entrei");
-        System.out.println(userLoginDTO);
         try{
             return new ResponseEntity<>(userService.login(userLoginDTO), HttpStatus.OK);
         }catch(Exception e){
-            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
     @GetMapping("/teste/{email}")
     private ResponseEntity<?> login(@PathVariable String email){
-        System.out.println("entrei");
         try{
             return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
         }catch(Exception e){

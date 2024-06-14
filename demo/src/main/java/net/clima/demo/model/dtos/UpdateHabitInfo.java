@@ -25,4 +25,5 @@ public class UpdateHabitInfo {
     private String reference;
     private GoalKind goalKind;
 
+
 }
